@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<style>
+    body {
+        background-color : pink;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 350px;
+        gap: 30px;
+    }
+    
+    .message-box {
+        opacity: 0;
+        position: relative;
+        background-color: #1f8aff;
+        color: #fff;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+    .me{
+        align-self: flex-end;
+        animation: slideLeft 0.5s ease-in-out var(--d) forwards;
+    }
+    
+    .triangle{
+        width: 0;
+        height: 0;
+        border-right: 20px solid transparent;
+        border-bottom: 15px solid #1f8aff;
+    }
+    .right {
+        position: absolute;
+        bottom: 10px;
+        right: -20px;
+    }
+    
+    @keyframes slideRight {
+        0% {
+            transform : translateX(-100%);
+        }
+        100% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    @keyframes slideLeft{
+        0%{
+            transform: translateX(100%);
+        }
+        100%{
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    .btn-primary {
+        display: none; /* Initially hide the button */
+        position: relative;
+        padding : 10px 20px;
+        background: #1f8aff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        overflow: hidden;
+    }
+    .shape {
+        top: 0;
+        position: absolute;
+        background: #ffffff81;
+        width: 30px;
+        height: 100%;
+        clip-path: polygon(25% 0% 100% 0%, 75% 100% , 0% 100%);
+    }
+    .btn-primary:hover .shape{
+        transform: translateX();
+        transition: transform 0.8s;
+    }
+    .btn-primary:hover{
+        background: #ff00ff;
+        scale: 1.05s;
+        transform: all 0.5s;
+    }
+</style>
+    <div class="container">
+        <div class="message-box me" style="--d: 0s">
+            Heyyoo sayang !
+            <div class="triangle right"></div>
+        </div>
+        <div class="message-box me" style="--d: 2s">
+            Selamat Ulang Tahun Sayang !
+            <div class="triangle right"></div>
+        </div>
+        <div class="message-box me" style="--d: 4s">
+            Maaf ya kalo aku cuman bisa ngasih ini
+            <div class="triangle right"></div>
+        </div>
+        <div class="message-box me" style="--d: 6s">
+            Sebelumnya Terima Kasih sudah selalu ada buatku, di dalam keadaan senang maupun susah :D
+            <div class="triangle right"></div>
+        </div>
+        <div class="message-box me" style="--d: 9s">
+            Semoga Panjang Umur, Sehat Selalu, Banyak Rezeki biar aku bisa jadi bapak rumah tangga hehehe
+            <div class="triangle right"></div>
+        </div>
+        <div class="message-box me" style="--d: 12s">
+            Mudahan semua yang direncakan kedepan bisa berjalan lancar tanpa kendala AMIN
+            <div class="triangle right"></div>
+        </div>
+        <div class="message-box me" style="--d: 15s">
+            Jangan pernah bosan ya sama aku hehehe
+            <div class="triangle right"></div>
+        </div>
+        <div class="message-box me" style="--d: 18s">
+            Sekali Lagi Selamat Ulang Tahun Sayang Hehe
+            <div class="triangle right"></div>
+        </div>
+        <a href="msg1" target="_blank">
+        <button id="nextButton" class="btn-primary me" style="--d: 21s" onclick="redirectToPage()">
+            Next
+            <div class="shape"></div>
+        </button>
+    </div>
+    
+    <script>
+        // Show the button after a delay of 21 seconds
+        setTimeout(() => {
+            document.getElementById('nextButton').style.display = 'block';
+        }, 21000); // 21 seconds
+        function redirectToPage() {
+            window.location.href = 'msg1';
+        }
+    </script>
+</body>
+</html>
