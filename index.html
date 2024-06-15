@@ -76,8 +76,7 @@
 
 <div id="typing-container" class="typing"></div>
 <div class="video-container">
-    <a href="nada/nada.html"></a>
-        <button id="nextButton" class="btn-primary">
+        <button id="nextButton" class="btn-primary" onclick="redirectToPage()">
             NEXT
             <div class="shape"></div>
         </button>
@@ -98,6 +97,9 @@
         } else {
             videoContainer.style.display = 'block'; // tampilkan video setelah teks selesai
         }
+    }
+        function redirectToPage() {
+        window.location.href = 'nada/nada.html';
     }
     typeText();
 </script>
