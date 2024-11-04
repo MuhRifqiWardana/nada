@@ -6,76 +6,67 @@
 <title>Network Status Indicator</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
-    .network-status {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 24px;
-        transition: color 0.3s ease;
-    }
+        .connection-status {
+            font-size: 2rem; /* Ukuran ikon */
+            margin-top: 20px;
+            text-align: center;
+        }
 
-    /* Default color (green) */
-    .network-status.good {
-        color: green;
-    }
-
-    /* Moderate color (yellow) */
-    .network-status.moderate {
-        color: yellow;
-    }
-
-    /* Slow color (red) */
-    .network-status.slow {
-        color: red;
-    }
+        .status-icon {
+            display: inline-block;
+            margin-right: 10px;
+            font-size: 3rem; /* Ukuran ikon WiFi */
+        }
 </style>
 </head>
 <body>
 
     <!-- Network status icon only -->
-    <div id="networkStatus" class="network-status fas fa-wifi good"></div>
+        <div class="connection-status" id="connection-status">
+            <span class="status-icon" id="status-icon"><i class="fas fa-wifi" style="color: gray;"></i></span>
+        </div>
 
 </body>
-<script>
-    const networkStatusIcon = document.getElementById('networkStatus');
+        <script>
+            function checkConnection() {
+                const statusIcon = document.getElementById('status-icon').querySelector('i');
 
-    // Function to measure network speed
-    async function measureNetworkSpeed() {
-        const testUrl = 'https://via.placeholder.com/50'; // Use a small image for speed test
-        const testRuns = 5; // Number of times to run the test for averaging
-        const sizeInBytes = 5000; // Approximate size of image in bytes
-        let totalDuration = 0;
-
-        for (let i = 0; i < testRuns; i++) {
-            const startTime = Date.now();
-            try {
-                const response = await fetch(testUrl, { cache: 'no-store' });
-                if (!response.ok) throw new Error('Network response was not ok');
-                const endTime = Date.now();
-                totalDuration += endTime - startTime; // Accumulate time in milliseconds
-            } catch (error) {
-                networkStatusIcon.className = 'network-status fas fa-wifi slow';
-                return; // If any request fails, assume network is offline or very slow
+                if (navigator.onLine) {
+                    testConnectionSpeed(statusIcon);
+                } else {
+                    statusIcon.style.color = "red"; // Warna merah untuk offline
+                }
             }
-        }
 
-        const averageDuration = totalDuration / testRuns; // Average time per request in ms
-        const speedBps = (sizeInBytes / averageDuration) * 1000; // Convert ms to seconds for Bps
-        const speedKbps = speedBps / 1024; // Convert to Kbps
+            function testConnectionSpeed(statusIcon) {
+                const imageUrl = "https://images.tokopedia.net/img/cache/500-square/VqbcmM/2022/10/4/d62bafd6-ea56-459b-baee-c7ef33273e11.jpg"; // Ganti dengan URL gambar yang cukup besar
+                const startTime = (new Date()).getTime();
+                const download = new Image();
+                
+                download.onload = function () {
+                    const endTime = (new Date()).getTime();
+                    const duration = (endTime - startTime) / 1000; // dalam detik
+                    const fileSize = 5000000; // Ukuran file dalam bytes (misalnya 5MB)
+                    const speedMbps = (fileSize / duration) / 1000000; // Menghitung kecepatan dalam Mbps
 
-        // Update icon color based on speed thresholds
-        if (speedKbps > 1000) { // > 1 Mbps
-            networkStatusIcon.className = 'network-status fas fa-wifi good';
-        } else if (speedKbps > 300) { // Between 300 Kbps and 1 Mbps
-            networkStatusIcon.className = 'network-status fas fa-wifi moderate';
-        } else {
-            networkStatusIcon.className = 'network-status fas fa-wifi slow';
-        }
-    }
+                    // Menentukan warna berdasarkan kecepatan
+                    if (speedMbps > 10) {
+                        statusIcon.style.color = "green"; // Warna hijau untuk online cepat
+                    } else if (speedMbps > 5) {
+                        statusIcon.style.color = "orange"; // Warna orange untuk online sedang
+                    } else {
+                        statusIcon.style.color = "red"; // Warna merah untuk online lambat
+                    }
+                };
 
-    // Check network speed every 5 seconds
-    setInterval(measureNetworkSpeed, 5000);
-    // Initial speed check
-    measureNetworkSpeed();
-</script>
+                download.onerror = function () {
+                    statusIcon.style.color = "red"; // Warna merah untuk error
+                };
+
+                download.src = imageUrl;
+            }
+
+            // Panggil fungsi checkConnection setiap 5 detik
+            setInterval(checkConnection, 5000);
+        </script>
 </html>
