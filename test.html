@@ -59,9 +59,9 @@
             const speedMbps = (speedBps / 1024 / 1024).toFixed(2); // Convert to Mbps for readability
 
             // Update icon color based on speed thresholds
-            if (speedMbps > 20) {
+            if (speedMbps > 2) {
                 networkStatusIcon.className = 'network-status fas fa-wifi good';
-            } else if (speedMbps > 5) {
+            } else if (speedMbps > 1) {
                 networkStatusIcon.className = 'network-status fas fa-wifi moderate';
             } else {
                 networkStatusIcon.className = 'network-status fas fa-wifi slow';
