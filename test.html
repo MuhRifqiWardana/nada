@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kata-kata Berjalan dan Video</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    .network-status {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+        transition: color 0.3s ease;
+    }
+
+    /* Default color (green) */
+    .network-status.good {
+        color: green;
+    }
+
+    /* Moderate color (yellow) */
+    .network-status.moderate {
+        color: yellow;
+    }
+
+    /* Slow color (red) */
+    .network-status.slow {
+        color: red;
+    }
+
+    /* Loader styles */
+    .loader-element {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top: 4px solid #3498db;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); background: rgb(245, 245, 245); }
+        50% { transform: rotate(180deg); background: #fbfbfc; }
+        100% { transform: rotate(360deg); background: rgb(239, 243, 241); }
+    }
+</style>
+</head>
+<body>
+
+    <!-- Network status icon only -->
+    <div id="networkStatus" class="network-status fas fa-wifi good"></div>
+
+</body>
+<script>
+    // Network status icon element
+    const networkStatusIcon = document.getElementById('networkStatus');
+
+    // Function to measure network speed
+    function measureNetworkSpeed() {
+        const image = new Image();
+        const startTime = Date.now();
+        const imageURL = 'https://via.placeholder.com/100'; // Use a small image URL for speed test
+        const sizeInBytes = 5000; // Approximate size of the image in bytes
+
+        image.onload = function () {
+            const endTime = Date.now();
+            const duration = (endTime - startTime) / 1000; // time in seconds
+            const speedBps = sizeInBytes / duration; // speed in bytes per second
+            const speedKbps = speedBps / 1024; // speed in kbps
+
+            // Update icon color based on speed thresholds
+            if (speedKbps > 500) {
+                networkStatusIcon.className = 'network-status fas fa-wifi good';
+            } else if (speedKbps > 100) {
+                networkStatusIcon.className = 'network-status fas fa-wifi moderate';
+            } else {
+                networkStatusIcon.className = 'network-status fas fa-wifi slow';
+            }
+        };
+
+        // On error (e.g., offline), set icon to red
+        image.onerror = function () {
+            networkStatusIcon.className = 'network-status fas fa-wifi slow';
+        };
+
+        image.src = imageURL + '?cache=' + Math.random(); // Prevent image caching
+    }
+
+    // Check network speed every 10 seconds
+    setInterval(measureNetworkSpeed, 10000);
+    // Initial speed check
+    measureNetworkSpeed();
+</script>
+</html>
