@@ -41,39 +41,40 @@
 
     // Function to measure network speed
     async function measureNetworkSpeed() {
-        const testUrl = 'https://speed.hetzner.de/100MB.bin'; // URL for a 100MB file for speed test
-        const startTime = Date.now();
+        const testUrl = 'https://via.placeholder.com/50'; // Use a small image for speed test
+        const testRuns = 5; // Number of times to run the test for averaging
+        const sizeInBytes = 5000; // Approximate size of image in bytes
+        let totalDuration = 0;
 
-        try {
-            const response = await fetch(testUrl, { cache: 'no-store' }); // Prevent caching
-            const endTime = Date.now();
-            const duration = (endTime - startTime) / 1000; // Duration in seconds
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            // Approximate size of the file (100 MB in bytes)
-            const dataSize = 100 * 1024 * 1024;
-            const speedBps = dataSize / duration; // Bytes per second
-            const speedMbps = (speedBps / 1024 / 1024).toFixed(2); // Convert to Mbps for readability
-
-            // Update icon color based on speed thresholds
-            if (speedMbps > 2) {
-                networkStatusIcon.className = 'network-status fas fa-wifi good';
-            } else if (speedMbps > 1) {
-                networkStatusIcon.className = 'network-status fas fa-wifi moderate';
-            } else {
+        for (let i = 0; i < testRuns; i++) {
+            const startTime = Date.now();
+            try {
+                const response = await fetch(testUrl, { cache: 'no-store' });
+                if (!response.ok) throw new Error('Network response was not ok');
+                const endTime = Date.now();
+                totalDuration += endTime - startTime; // Accumulate time in milliseconds
+            } catch (error) {
                 networkStatusIcon.className = 'network-status fas fa-wifi slow';
+                return; // If any request fails, assume network is offline or very slow
             }
-        } catch (error) {
-            // On fetch error, assume offline or very slow connection
+        }
+
+        const averageDuration = totalDuration / testRuns; // Average time per request in ms
+        const speedBps = (sizeInBytes / averageDuration) * 1000; // Convert ms to seconds for Bps
+        const speedKbps = speedBps / 1024; // Convert to Kbps
+
+        // Update icon color based on speed thresholds
+        if (speedKbps > 1000) { // > 1 Mbps
+            networkStatusIcon.className = 'network-status fas fa-wifi good';
+        } else if (speedKbps > 300) { // Between 300 Kbps and 1 Mbps
+            networkStatusIcon.className = 'network-status fas fa-wifi moderate';
+        } else {
             networkStatusIcon.className = 'network-status fas fa-wifi slow';
         }
     }
 
-    // Check network speed every 10 seconds (since downloading large files too often can cause bandwidth issues)
-    setInterval(measureNetworkSpeed, 10000);
+    // Check network speed every 5 seconds
+    setInterval(measureNetworkSpeed, 5000);
     // Initial speed check
     measureNetworkSpeed();
 </script>
